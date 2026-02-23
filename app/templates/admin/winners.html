@@ -1,0 +1,24 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card" style="max-width:720px;">
+  <h1 class="h1 neon">Publicar ganadores</h1>
+  <p class="muted">Captura manual 1°, 2°, 3° (01-100) y publica resultados.</p>
+
+  <form method="POST" novalidate>
+    {{ form.csrf_token }}
+    <label class="label">1er lugar</label>
+    {{ form.first_ticket(class_="input") }}
+    <label class="label">2do lugar</label>
+    {{ form.second_ticket(class_="input") }}
+    <label class="label">3er lugar</label>
+    {{ form.third_ticket(class_="input") }}
+    <button class="btn btn--primary" type="submit">Publicar</button>
+  </form>
+
+  {% if winners.published_at %}
+    <p class="muted small" style="margin-top:12px;">
+      Publicado: {{ winners.published_at.strftime("%Y-%m-%d %H:%M") }} (UTC)
+    </p>
+  {% endif %}
+</section>
+{% endblock %}

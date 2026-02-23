@@ -1,0 +1,77 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <div class="row">
+    <div>
+      <h1 class="h1 neon">Boletos</h1>
+      <p class="muted">
+        Selecciona hasta <strong>{{ raffle.max_tickets_per_purchase }}</strong> boletos <strong>LIBRES</strong> y luego presiona
+        <strong>Registrar venta</strong>.
+      </p>
+    </div>
+
+    <div class="row__right">
+      <a id="registerBtn" class="btn btn--primary btn--disabled" href="#" aria-disabled="true">
+        Registrar venta
+      </a>
+    </div>
+  </div>
+
+  <div class="glass inner" style="margin-top:12px;">
+    <p class="muted">
+      Colores:
+      <span class="pill pill--free">Libre</span>
+      <span class="pill pill--res">Apartado</span>
+      <span class="pill pill--paid">Pagado</span>
+    </p>
+
+    <div class="muted small">Seleccionados:</div>
+    <div id="selectedPreview" class="selected-preview">—</div>
+  </div>
+
+  <div
+    id="ticketsGridAdminPick"
+    class="tickets-grid"
+    data-api="{{ url_for('public.api_tickets') }}"
+    data-select="1"
+    data-max="{{ raffle.max_tickets_per_purchase }}"
+  ></div>
+
+  <hr class="sep">
+
+  <h3 class="h3">Buscar boleto (opcional)</h3>
+  <form method="GET" class="row" style="gap:10px;">
+    <input class="input" type="text" name="q" placeholder="Buscar número (1-100)" value="{{ query_num }}">
+    <button class="btn btn--primary" type="submit">Buscar</button>
+  </form>
+
+  {% if ticket %}
+    <div class="glass inner" style="margin-top:12px;">
+      <h3 class="h3">Resultado: {{ "%02d"|format(ticket.number) }}</h3>
+      <p class="muted">Estado: <strong>{{ ticket.status.value }}</strong></p>
+
+      {% if purchase %}
+        <p class="muted">
+          Última compra asociada:
+          <a class="link" href="{{ url_for('admin.purchase_detail', purchase_id=purchase.id) }}">{{ purchase.folio }}</a>
+          ({{ purchase.status.value }})
+        </p>
+      {% else %}
+        <p class="muted">Sin compra asociada.</p>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('admin.ticket_force_free', ticket_id=ticket.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn" type="submit">Forzar LIBRE</button>
+      </form>
+
+      <p class="muted small">No libera si pertenece a compra PAGADA.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_pick.js') }}"></script>
+{% endblock %}

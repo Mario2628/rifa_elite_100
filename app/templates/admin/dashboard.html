@@ -1,0 +1,35 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Dashboard</h1>
+  <p class="muted">
+    Rifa activa: <strong>{{ raffle.name }}</strong> · Precio: <strong>${{ raffle.ticket_price_mxn }} MXN</strong>
+  </p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat__n">{{ paid }}</div><div class="stat__t">Boletos pagados</div></div>
+    <div class="stat"><div class="stat__n">{{ reserved }}</div><div class="stat__t">Boletos apartados</div></div>
+    <div class="stat"><div class="stat__n">{{ free }}</div><div class="stat__t">Boletos libres</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="glass inner">
+      <h3 class="h3">Compras</h3>
+      <p class="muted">
+        Pendientes: <strong>{{ pending }}</strong><br>
+        Aprobadas: <strong>{{ approved }}</strong><br>
+        Pagadas: <strong>{{ paid_p }}</strong>
+      </p>
+      <a class="btn btn--primary" href="{{ url_for('admin.purchases') }}">Ver compras</a>
+    </div>
+
+    <div class="glass inner">
+      <h3 class="h3">Total vendido</h3>
+      <p class="muted">
+        <strong>${{ total_sold_mxn }} MXN</strong>
+      </p>
+      <a class="btn" href="{{ url_for('admin.reports') }}">Reportes</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

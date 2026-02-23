@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Admin - {{ config.APP_NAME }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="bg">
+  <main class="container" style="max-width:520px; padding-top:60px;">
+    <section class="glass card">
+      <h1 class="h1 neon">Admin Login</h1>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flashwrap">
+            {% for category, msg in messages %}
+              <div class="flash flash--{{ category }}">{{ msg }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" novalidate>
+        {{ form.csrf_token }}
+        <label class="label">Usuario</label>
+        {{ form.username(class_="input") }}
+        <label class="label">Contraseña</label>
+        {{ form.password(class_="input") }}
+        <button class="btn btn--primary" type="submit">Entrar</button>
+      </form>
+
+      <p class="muted small" style="margin-top:10px;">
+        Si es tu primer acceso, el sistema te pedirá cambiar contraseña.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

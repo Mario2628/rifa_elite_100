@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Términos, +18 y Aviso de Privacidad</h1>
+
+  <h3 class="h3">1) Organizador</h3>
+  <p class="muted">
+    Esta dinámica es organizada por <strong>{{ config.ORGANIZER_NAME }}</strong>, en
+    <strong>{{ config.ORGANIZER_LOCATION }}</strong>.
+  </p>
+
+  <h3 class="h3">2) Reglas básicas</h3>
+  <ul class="muted list">
+    <li>Rifa pública de 100 números (01–100).</li>
+    <li>Costo: ${{ raffle.ticket_price_mxn }} MXN por boleto.</li>
+    <li>Máximo {{ raffle.max_tickets_per_purchase }} boletos por compra/folio.</li>
+    <li>La selección de boletos es por solicitud y queda como “Apartado” hasta confirmación.</li>
+    <li>El admin confirma pagos manualmente y marca boletos como “Pagado”.</li>
+    <li>Los ganadores (1°,2°,3°) se publican manualmente en el panel y en la web.</li>
+  </ul>
+
+  <h3 class="h3">3) +18 (obligatorio)</h3>
+  <p class="muted">
+    🔞 Participación exclusiva para mayores de 18 años. Al enviar una solicitud, confirmas ser mayor de edad.
+  </p>
+
+  <h3 class="h3">4) Aviso de Privacidad</h3>
+  <p class="muted">
+    Datos recabados: <strong>nombre</strong> y <strong>teléfono (WhatsApp)</strong> exclusivamente para administrar
+    la participación en la rifa, verificar folios y comunicación relacionada.
+    No se publican datos personales en el tablero.
+  </p>
+  <p class="muted">
+    Para dudas o solicitudes relacionadas con tus datos, contáctanos por WhatsApp:
+    <strong>+{{ config.WHATSAPP_PHONE_E164 }}</strong>.
+  </p>
+
+  <p class="muted small">
+    Importante: Los términos y avisos no sustituyen trámites o permisos que puedan requerirse ante autoridades.
+  </p>
+</section>
+{% endblock %}

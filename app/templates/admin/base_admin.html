@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - {{ config.APP_NAME }}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo_rifa.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="bg">
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="{{ url_for('admin.dashboard') }}">
+        <img class="brand__logo" src="{{ url_for('static', filename='img/logo_rifa.png') }}" alt="Logo">
+        <span class="brand__text">Admin</span>
+      </a>
+
+      <button
+        id="adminNavToggle"
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menú"
+        aria-controls="adminNav"
+        aria-expanded="false"
+      >
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+      </button>
+
+      <nav id="adminNav" class="nav" aria-label="Menú admin">
+        <a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin.tickets_manage') }}">Boletos</a>
+        <a href="{{ url_for('admin.purchases') }}">Compras</a>
+        <a href="{{ url_for('admin.reports') }}">Reportes</a>
+        <a href="{{ url_for('admin.winners') }}">Ganadores</a>
+        <a href="{{ url_for('admin.audit') }}">Bitácora</a>
+        <a href="{{ url_for('admin.admin_users') }}">Admins</a>
+        <a href="{{ url_for('admin.logout') }}">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashwrap">
+          {% for category, msg in messages %}
+            <div class="flash flash--{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <a class="wa-fab" href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}" target="_blank" rel="noopener">
+    <span class="wa-fab__chip">WhatsApp</span>
+    <span class="wa-fab__btn" aria-hidden="true">
+      <img class="wa-fab__icon" src="{{ url_for('static', filename='img/whatsapp.svg') }}" alt="">
+    </span>
+  </a>
+
+  <script src="{{ url_for('static', filename='js/nav_toggle.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <div class="row">
+    <div>
+      <h1 class="h1 neon">Compras / Folios</h1>
+      <p class="muted small">Filtra por estado: PENDING, APPROVED, PAID, CANCELLED.</p>
+    </div>
+
+    <div class="row__right filters">
+      {% set s = (status or "")|upper %}
+      <a class="chip {% if not s %}chip--active{% endif %}" href="{{ url_for('admin.purchases') }}">Todos</a>
+      <a class="chip {% if s=='PENDING' %}chip--active{% endif %}" href="{{ url_for('admin.purchases', status='PENDING') }}">Pendientes</a>
+      <a class="chip {% if s=='APPROVED' %}chip--active{% endif %}" href="{{ url_for('admin.purchases', status='APPROVED') }}">Aprobadas</a>
+      <a class="chip {% if s=='PAID' %}chip--active{% endif %}" href="{{ url_for('admin.purchases', status='PAID') }}">Pagadas</a>
+      <a class="chip {% if s=='CANCELLED' %}chip--active{% endif %}" href="{{ url_for('admin.purchases', status='CANCELLED') }}">Canceladas</a>
+    </div>
+  </div>
+
+  <div class="tablewrap" style="margin-top:14px;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>Nombre</th>
+          <th>WhatsApp</th>
+          <th>Estado</th>
+          <th>Boletos</th>
+          <th>Total</th>
+          <th>Creado</th>
+          <th class="th-right">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in items %}
+          <tr>
+            <td class="mono"><strong>{{ p.folio }}</strong></td>
+            <td>{{ p.buyer_name }}</td>
+            <td class="mono">+{{ p.buyer_phone_e164 }}</td>
+            <td>
+              {% set st = p.status.value %}
+              <span class="badge
+                {% if st == 'PENDING' %}badge--pending{% elif st == 'APPROVED' %}badge--approved{% elif st == 'PAID' %}badge--paid{% else %}badge--cancelled{% endif %}
+              ">
+                {{ st }}
+              </span>
+            </td>
+            <td class="mono">
+              {% set ns = namespace(nums=[]) %}
+              {% for t in p.tickets|sort(attribute='number') %}
+                {% set ns.nums = ns.nums + ["%02d"|format(t.number)] %}
+              {% endfor %}
+              {{ ns.nums|join(', ') }}
+            </td>
+            <td class="mono">${{ p.total_amount_mxn() }} MXN</td>
+            <td class="mono">{{ p.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td class="th-right">
+              <a class="link" href="{{ url_for('admin.purchase_detail', purchase_id=p.id) }}">Ver</a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8" class="muted">No hay registros.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

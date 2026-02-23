@@ -1,0 +1,44 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <div class="row">
+    <div>
+      <h1 class="h1 neon">Bitácora (Auditoría)</h1>
+      <p class="muted small">Últimos 300 eventos.</p>
+    </div>
+  </div>
+
+  <div class="tablewrap" style="margin-top:14px;">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Admin</th>
+          <th>Acción</th>
+          <th>Entidad</th>
+          <th>ID</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr>
+            <td class="mono">{{ log.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+            <td>{{ log.admin_user.username if log.admin_user else "—" }}</td>
+            <td class="mono">
+              <span class="badge badge--info">{{ log.action }}</span>
+            </td>
+            <td class="mono">{{ log.entity_type or "—" }}</td>
+            <td class="mono">{{ log.entity_id or "—" }}</td>
+            <td class="mono">{{ log.ip_address or "—" }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="6" class="muted">Sin eventos.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

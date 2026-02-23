@@ -1,0 +1,68 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Detalle de compra</h1>
+  <p class="muted">
+    Folio: <code>{{ purchase.folio }}</code> · Estado: <strong>{{ purchase.status.value }}</strong>
+  </p>
+
+  <div class="grid2">
+    <div class="glass inner">
+      <h3 class="h3">Cliente</h3>
+      <p class="muted">
+        Nombre: <strong>{{ purchase.buyer_name }}</strong><br>
+        WhatsApp: <strong>+{{ purchase.buyer_phone_e164 }}</strong><br>
+        Creado: <strong>{{ purchase.created_at.strftime("%Y-%m-%d %H:%M") }}</strong>
+      </p>
+
+      <h3 class="h3">Boletos</h3>
+      <p class="muted">
+        {% for t in purchase.tickets|sort(attribute='number') %}
+          <span class="pill">{{ "%02d"|format(t.number) }}</span>
+        {% endfor %}
+      </p>
+      <p class="muted">Total: <strong>${{ purchase.total_amount_mxn() }} MXN</strong></p>
+
+      <div class="cta">
+        {% if purchase.status.value == 'PENDING' %}
+          <form method="POST" action="{{ url_for('admin.purchase_approve', purchase_id=purchase.id) }}">
+            {{ note_form.csrf_token }}
+            <button class="btn btn--primary" type="submit">Aprobar (Apartado)</button>
+          </form>
+        {% endif %}
+
+        {% if purchase.status.value in ['PENDING','APPROVED'] %}
+          <form method="POST" action="{{ url_for('admin.purchase_mark_paid', purchase_id=purchase.id) }}">
+            {{ note_form.csrf_token }}
+            <button class="btn btn--primary" type="submit">Marcar PAGADO</button>
+          </form>
+        {% endif %}
+
+        {% if purchase.status.value in ['PENDING','APPROVED'] %}
+          <form method="POST" action="{{ url_for('admin.purchase_cancel', purchase_id=purchase.id) }}">
+            {{ note_form.csrf_token }}
+            <button class="btn" type="submit">Cancelar y liberar</button>
+          </form>
+        {% endif %}
+      </div>
+
+      {% if wa_link %}
+        <div class="glass inner" style="margin-top:14px;">
+          <h3 class="h3">WhatsApp (1 click)</h3>
+          <a class="btn btn--primary" href="{{ wa_link }}" target="_blank" rel="noopener">Enviar confirmación</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="glass inner">
+      <h3 class="h3">Notas internas</h3>
+      <form method="POST" novalidate>
+        {{ note_form.csrf_token }}
+        {{ note_form.notes(class_="input", style="min-height:160px;") }}
+        <button class="btn btn--primary" type="submit">Guardar notas</button>
+      </form>
+      <p class="muted small">Las notas no se muestran públicamente.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Verificar mi folio</h1>
+  <p class="muted">Ingresa tu <strong>folio</strong> y tu <strong>WhatsApp</strong> para ver tus boletos.</p>
+
+  <form method="POST" class="verify" novalidate>
+    {{ form.csrf_token }}
+    <label class="label">Folio</label>
+    {{ form.folio(class_="input", placeholder="Ej: RF26-ABC123") }}
+
+    <label class="label">WhatsApp</label>
+    {{ form.phone(class_="input", placeholder="10 dígitos (MX)") }}
+
+    <button class="btn btn--primary" type="submit">Buscar</button>
+  </form>
+
+  {% if purchase %}
+    <div class="glass inner" style="margin-top:16px;">
+      <h3 class="h3">Resultado</h3>
+      <p class="muted">
+        Estado:
+        {% if purchase.status.value == 'PAID' %}
+          <span class="pill pill--paid">Pagado</span>
+        {% elif purchase.status.value == 'CANCELLED' %}
+          <span class="pill pill--res">Cancelado</span>
+        {% else %}
+          <span class="pill pill--res">Apartado</span>
+        {% endif %}
+      </p>
+      <p class="muted">
+        Boletos:
+        <strong>
+          {% for t in purchase.tickets|sort(attribute='number') %}
+            {{ "%02d"|format(t.number) }}{% if not loop.last %}, {% endif %}
+          {% endfor %}
+        </strong>
+      </p>
+      <p class="muted small">
+        Sorteo: 06/Mar/2026 – 8:00 PM (CDMX) · 🔞 +18
+      </p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

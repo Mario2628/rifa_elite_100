@@ -1,0 +1,41 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Admins</h1>
+  <p class="muted">Crea admins con contraseña temporal. Cambiarán contraseña al primer login.</p>
+
+  <div class="grid2">
+    <div class="glass inner">
+      <h3 class="h3">Crear admin</h3>
+      <form method="POST" novalidate>
+        {{ form.csrf_token }}
+        <label class="label">Usuario</label>
+        {{ form.username(class_="input") }}
+        <label class="label">Contraseña temporal</label>
+        {{ form.temp_password(class_="input") }}
+        <button class="btn btn--primary" type="submit">Crear</button>
+      </form>
+      <p class="muted small">Política: 12+ chars, mayúscula, minúscula, número y símbolo.</p>
+    </div>
+
+    <div class="glass inner">
+      <h3 class="h3">Lista</h3>
+      <div class="tablewrap">
+        <table class="table">
+          <thead><tr><th>Usuario</th><th>Activo</th><th>Must change</th><th>Creado</th></tr></thead>
+          <tbody>
+            {% for u in users %}
+              <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ 'Sí' if u.is_active else 'No' }}</td>
+                <td>{{ 'Sí' if u.must_change_password else 'No' }}</td>
+                <td>{{ u.created_at.strftime("%Y-%m-%d") }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

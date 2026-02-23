@@ -1,0 +1,54 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card" style="max-width:820px;">
+  <h1 class="h1 neon">Registrar venta</h1>
+  <p class="muted">
+    Se registrará con un <strong>folio nuevo</strong>. Si quieres cambiar boletos,
+    regresa a <a class="link" href="{{ url_for('admin.tickets_manage') }}">Boletos</a>.
+  </p>
+
+  <div class="glass inner" style="margin-top:12px;">
+    <div class="muted small">Boletos seleccionados:</div>
+    <div class="selected-preview" style="margin-top:6px;">
+      {% if selected_numbers %}
+        {% for n in selected_numbers %}
+          <span class="pill">{{ "%02d"|format(n) }}</span>
+        {% endfor %}
+      {% else %}
+        —
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="POST" novalidate style="margin-top:14px;">
+    {{ form.csrf_token }}
+
+    {{ form.ticket_numbers(id="ticket_numbers", value=prefill_numbers) }}
+
+    <label class="label">Nombre</label>
+    {{ form.buyer_name(class_="input", placeholder="Nombre del cliente") }}
+
+    <label class="label">WhatsApp</label>
+    {{ form.buyer_phone(class_="input", placeholder="10 dígitos (MX)") }}
+
+    <label class="label">Estado</label>
+    {{ form.status(class_="input") }}
+
+    <label class="label">Notas internas (opcional)</label>
+    {{ form.notes(class_="input", style="min-height:120px;", placeholder="Notas para ti (no público)") }}
+
+    <div class="cta">
+      {% if selected_numbers %}
+        <button class="btn btn--primary" type="submit">Guardar</button>
+      {% else %}
+        <a class="btn btn--primary" href="{{ url_for('admin.tickets_manage') }}">Elegir boletos</a>
+      {% endif %}
+      <a class="btn" href="{{ url_for('admin.purchases') }}">Ver compras</a>
+    </div>
+
+    <p class="muted small" style="margin-top:12px;">
+      Si eliges <strong>Pagado</strong>, los boletos pasan a PAGADOS y podrás enviar WhatsApp desde el detalle.
+    </p>
+  </form>
+</section>
+{% endblock %}

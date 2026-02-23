@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Contacto</h1>
+  <p class="muted">
+    Organiza: <strong>{{ config.ORGANIZER_NAME }}</strong><br>
+    Ubicación: <strong>{{ config.ORGANIZER_LOCATION }}</strong>
+  </p>
+
+  <div class="cta">
+    <a class="btn btn--primary" href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}" target="_blank" rel="noopener">
+      WhatsApp: +{{ config.WHATSAPP_PHONE_E164 }}
+    </a>
+  </div>
+
+  <p class="muted small">
+    Atención y dudas únicamente por WhatsApp.
+  </p>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Reportes</h1>
+
+  <div class="stats">
+    <div class="stat"><div class="stat__n">{{ paid_tickets }}</div><div class="stat__t">Boletos pagados</div></div>
+    <div class="stat"><div class="stat__n">{{ reserved_tickets }}</div><div class="stat__t">Boletos apartados</div></div>
+    <div class="stat"><div class="stat__n">{{ free_tickets }}</div><div class="stat__t">Boletos libres</div></div>
+  </div>
+
+  <div class="glass inner">
+    <h3 class="h3">Total vendido</h3>
+    <p class="muted"><strong>${{ total_sold_mxn }} MXN</strong></p>
+    <p class="muted small">Compras pagadas: {{ paid_purchases }} · Pendientes: {{ pending_purchases }}</p>
+
+    <div class="cta">
+      <a class="btn btn--primary" href="{{ url_for('admin.export_excel') }}">Exportar Excel</a>
+      <a class="btn" href="{{ url_for('admin.export_pdf') }}">Exportar PDF</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

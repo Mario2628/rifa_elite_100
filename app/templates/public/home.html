@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- LANDING FULLSCREEN REAL -->
+<section class="landing bleed" data-landing-bg="{{ url_for('static', filename='img/banner_rifa.jpeg') }}">
+  <div class="landing__overlay"></div>
+
+  <div class="landing__content">
+    <h1 class="landing__title">{{ config.APP_NAME }}</h1>
+    <p class="landing__subtitle">
+      100 números · ${{ raffle.ticket_price_mxn }} MXN por boleto · Sorteo: <strong>06/Mar/2026 8:00 PM (CDMX)</strong>
+    </p>
+
+    <div class="landing__cta">
+      <a class="btn btn--primary btn--xl" href="#boletos">Ver boletos</a>
+    </div>
+
+    <div class="landing__hint">Desliza hacia abajo ↓</div>
+  </div>
+</section>
+
+<!-- TABLERO (ABAJO DEL FOLD) -->
+<section id="boletos" class="glass card section">
+  <div class="row">
+    <div>
+      <h2 class="h1 neon">Tablero 01–100</h2>
+      <p class="muted">
+        Colores: <span class="pill pill--free">Libre</span>
+        <span class="pill pill--res">Apartado</span>
+        <span class="pill pill--paid">Pagado</span>
+      </p>
+    </div>
+
+    <div class="row__right">
+      <a class="btn" href="{{ url_for('public.tickets') }}">Abrir tablero completo</a>
+      <a class="btn btn--primary" href="{{ url_for('public.request_tickets') }}">Solicitar</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat__n">{{ paid }}</div><div class="stat__t">Pagados</div></div>
+    <div class="stat"><div class="stat__n">{{ reserved }}</div><div class="stat__t">Apartados</div></div>
+    <div class="stat"><div class="stat__n">{{ free }}</div><div class="stat__t">Libres</div></div>
+  </div>
+
+  {% set sold = paid + reserved %}
+  {% set pct = (sold / total * 100) if total else 0 %}
+
+  <div class="progress">
+    <div class="progress__bar" data-progress="{{ pct }}"></div>
+  </div>
+  <p class="muted small">Progreso: {{ sold }} / {{ total }} boletos.</p>
+
+  <div id="ticketsGridHome" class="tickets-grid" data-api="{{ url_for('public.api_tickets') }}"></div>
+</section>
+
+<section class="grid2 section">
+  <div class="glass card">
+    <h2 class="h2">Premios</h2>
+    <p class="muted">3 lugares: perfumes premium + tequila. Todo nuevo y sellado.</p>
+    <a class="link" href="{{ url_for('public.prizes') }}">Ver premios →</a>
+  </div>
+
+  <div class="glass card">
+    <h2 class="h2">Resultados</h2>
+    {% if winners and winners.published_at %}
+      <p class="muted">
+        1°: <strong>{{ "%02d"|format(winners.first_ticket) }}</strong> ·
+        2°: <strong>{{ "%02d"|format(winners.second_ticket) }}</strong> ·
+        3°: <strong>{{ "%02d"|format(winners.third_ticket) }}</strong>
+      </p>
+      <a class="link" href="{{ url_for('public.results') }}">Ver detalles →</a>
+    {% else %}
+      <p class="muted">Aún no se publican ganadores.</p>
+      <a class="link" href="{{ url_for('public.results') }}">Ir a resultados →</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home_ui.js') }}"></script>
+{% endblock %}

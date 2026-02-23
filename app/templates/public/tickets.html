@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <div class="row">
+    <div>
+      <h1 class="h1 neon">Tablero 01–100</h1>
+      <p class="muted">
+        Colores: <span class="pill pill--free">Libre</span>
+        <span class="pill pill--res">Apartado</span>
+        <span class="pill pill--paid">Pagado</span>
+      </p>
+    </div>
+    <div class="row__right">
+      <a class="btn btn--primary" href="{{ url_for('public.request_tickets') }}">Solicitar</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat__n">{{ paid }}</div><div class="stat__t">Pagados</div></div>
+    <div class="stat"><div class="stat__n">{{ reserved }}</div><div class="stat__t">Apartados</div></div>
+    <div class="stat"><div class="stat__n">{{ free }}</div><div class="stat__t">Libres</div></div>
+  </div>
+
+  {% set sold = paid + reserved %}
+  {% set pct = (sold / total * 100) if total else 0 %}
+
+  <div class="progress">
+    <div class="progress__bar" data-progress="{{ pct }}"></div>
+  </div>
+  <p class="muted small">Progreso: {{ sold }} / {{ total }} boletos.</p>
+
+  <div id="ticketsGrid" class="tickets-grid" data-api="{{ url_for('public.api_tickets') }}"></div>
+
+  <p class="muted small">Este tablero se actualiza constantemente.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home_ui.js') }}"></script>
+{% endblock %}

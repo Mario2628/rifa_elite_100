@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Solicitud enviada ✅</h1>
+  <p class="muted">
+    Tu solicitud quedó registrada como <strong>Apartado</strong> (pendiente de confirmación).
+    Guarda tu folio para verificar:
+  </p>
+
+  <div class="folio">
+    <div class="folio__label">FOLIO</div>
+    <div class="folio__value">{{ purchase.folio }}</div>
+  </div>
+
+  <p class="muted">
+    Boletos solicitados:
+    <strong>
+      {% for n in selected_numbers %}{{ "%02d"|format(n) }}{% if not loop.last %}, {% endif %}{% endfor %}
+    </strong>
+  </p>
+
+  <div class="cta">
+    <a class="btn btn--primary" href="{{ url_for('public.verify') }}">Verificar folio</a>
+    <a class="btn" href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}" target="_blank" rel="noopener">Contactar por WhatsApp</a>
+  </div>
+
+  <p class="muted small">Nota: un WhatsApp solo puede tener 1 solicitud pendiente a la vez.</p>
+</section>
+{% endblock %}

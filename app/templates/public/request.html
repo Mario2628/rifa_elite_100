@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Solicitar boletos</h1>
+  <p class="muted">
+    Selecciona hasta <strong>{{ raffle.max_tickets_per_purchase }}</strong> boletos <strong>LIBRES</strong>.
+    Se marcarán como <strong>Apartado</strong> hasta que el admin confirme.
+  </p>
+
+  <div class="two">
+    <div class="glass card">
+      <h2 class="h2">1) Selecciona tus boletos</h2>
+      <p class="muted small">
+        Colores: <span class="pill pill--free">Libre</span>
+        <span class="pill pill--res">Apartado</span>
+        <span class="pill pill--paid">Pagado</span>
+      </p>
+
+      <div class="glass inner" style="margin-top:12px;">
+        <div class="muted small">Seleccionados (<span id="selectedCount">0</span>):</div>
+        <div id="selectedPreview" class="selected-preview">—</div>
+      </div>
+
+      <div
+        id="ticketsGridSelect"
+        class="tickets-grid"
+        data-api="{{ url_for('public.api_tickets') }}"
+        data-select="1"
+        data-max="{{ raffle.max_tickets_per_purchase }}"
+      ></div>
+
+      <p class="muted small" style="margin-top:10px;">
+        Máximo {{ raffle.max_tickets_per_purchase }} por compra. Un WhatsApp solo puede tener 1 solicitud pendiente.
+      </p>
+    </div>
+
+    <div class="glass card">
+      <h2 class="h2">2) Tus datos</h2>
+
+      <form method="POST" novalidate>
+        {{ form.csrf_token }}
+        {{ form.ticket_numbers(id="ticket_numbers") }}
+
+        <label class="label">Nombre</label>
+        {{ form.buyer_name(class_="input", placeholder="Tu nombre") }}
+
+        <label class="label">WhatsApp</label>
+        {{ form.buyer_phone(class_="input", placeholder="10 dígitos (MX)") }}
+
+        <label class="check">
+          {{ form.confirm_age() }}
+          <span>Soy mayor de 18 años</span>
+        </label>
+
+        <label class="check">
+          {{ form.accept_terms() }}
+          <span>Acepto <a class="link" href="{{ url_for('public.terms') }}">términos y aviso de privacidad</a></span>
+        </label>
+
+        <button id="submitRequestBtn" class="btn btn--primary btn--disabled" type="submit" disabled>
+          Enviar solicitud
+        </button>
+
+        <p class="muted small" style="margin-top:10px;">
+          Pago en efectivo o transferencia. Los datos se coordinan por WhatsApp.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
+<script src="{{ url_for('static', filename='js/request_ui.js') }}"></script>
+{% endblock %}

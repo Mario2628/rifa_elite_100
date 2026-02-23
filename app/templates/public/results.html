@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Resultados</h1>
+
+  {% if winners and winners.published_at %}
+    <p class="muted">Ganadores publicados:</p>
+    <div class="winners">
+      <div class="winner glass">
+        <div class="winner__place">1°</div>
+        <div class="winner__num">{{ "%02d"|format(winners.first_ticket) }}</div>
+      </div>
+      <div class="winner glass">
+        <div class="winner__place">2°</div>
+        <div class="winner__num">{{ "%02d"|format(winners.second_ticket) }}</div>
+      </div>
+      <div class="winner glass">
+        <div class="winner__place">3°</div>
+        <div class="winner__num">{{ "%02d"|format(winners.third_ticket) }}</div>
+      </div>
+    </div>
+    <p class="muted small">Fecha sorteo: 06/Mar/2026 8:00 PM (CDMX)</p>
+  {% else %}
+    <p class="muted">Aún no se publican ganadores.</p>
+  {% endif %}
+</section>
+{% endblock %}

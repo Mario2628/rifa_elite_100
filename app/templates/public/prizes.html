@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Premios (3 lugares)</h1>
+  <p class="muted">Todos los premios son nuevos.</p>
+
+  <div class="prizegrid">
+    <div class="glass prize">
+      <div class="prize__tag">1° LUGAR</div>
+      <img class="prize__img" src="{{ url_for('static', filename='img/1_perfume.jpeg') }}" alt="Jean Paul Gaultier Le Beau">
+      <h3 class="h3">Jean Paul Gaultier — Le Beau EDT 125 ml</h3>
+      <p class="muted">Fragancia masculina fresca y elegante. Ideal para un estilo premium.</p>
+    </div>
+
+    <div class="glass prize">
+      <div class="prize__tag">2° LUGAR</div>
+      <img class="prize__img" src="{{ url_for('static', filename='img/2_perfume.avif') }}" alt="Versace Eros">
+      <h3 class="h3">Versace — Eros EDP 100 ml</h3>
+      <p class="muted">Aroma intenso con vibra sofisticada. Un clásico moderno de lujo.</p>
+    </div>
+
+    <div class="glass prize">
+      <div class="prize__tag">3° LUGAR</div>
+      <img class="prize__img" src="{{ url_for('static', filename='img/7leguas.jpg') }}" alt="Tequila Siete Leguas Blanco">
+      <h3 class="h3">Tequila Siete Leguas — Blanco 1 L</h3>
+      <p class="muted">Tequila blanco premium. Premio exclusivo para mayores de 18 años.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

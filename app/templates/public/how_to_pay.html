@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="glass card">
+  <h1 class="h1 neon">Cómo pagar</h1>
+  <p class="muted">
+    El pago se coordina <strong>solo por WhatsApp</strong>.
+    Puedes pagar en <strong>efectivo</strong> o por <strong>transferencia</strong>.
+  </p>
+  <div class="cta">
+    <a class="btn btn--primary" href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}" target="_blank" rel="noopener">
+      Pedir información por WhatsApp
+    </a>
+  </div>
+  <p class="muted small">
+    Nota: Una vez confirmado el pago por el admin, tu boleto se marca como <strong>Pagado</strong> y quedas participando.
+  </p>
+</section>
+{% endblock %}
