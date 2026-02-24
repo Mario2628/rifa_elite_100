@@ -8,14 +8,11 @@ app = create_app()
 def _bootstrap_db_if_needed() -> None:
     """
     Render Free no permite Shell ni Pre-Deploy.
-    Entonces hacemos bootstrap automático:
-      - Si NO existe la tabla 'raffles' => corre alembic upgrade (flask-migrate)
-      - Si NO hay rifa activa => corre seed (tu comando existente)
-    Esto solo corre una vez por deploy (bloqueo advisory en Postgres).
+    Bootstrapping automático:
+      - Si NO existe 'raffles' => corre alembic upgrade (flask-migrate)
+      - Si NO hay rifa activa => corre seed usando Click main() (con contexto)
+    Usa advisory lock para que sólo 1 worker haga esto.
     """
-
-    # Permite desactivarlo si algún día quieres:
-    # AUTO_BOOTSTRAP_DB=0
     if os.getenv("AUTO_BOOTSTRAP_DB", "1") != "1":
         return
 
@@ -23,7 +20,6 @@ def _bootstrap_db_if_needed() -> None:
     from sqlalchemy import text
 
     with app.app_context():
-        # Bloqueo global para evitar que varios workers intenten seed/migrate al mismo tiempo
         lock_key = 987654321
 
         raw = None
@@ -35,6 +31,7 @@ def _bootstrap_db_if_needed() -> None:
             raw.commit()
 
             # 1) ¿Existe la tabla raffles?
+            exists = None
             try:
                 exists = db.session.execute(text("select to_regclass('public.raffles')")).scalar()
             except Exception:
@@ -45,7 +42,8 @@ def _bootstrap_db_if_needed() -> None:
                 from flask_migrate import upgrade
                 upgrade()
 
-            # 3) Si no hay rifa activa, corre seed (crea rifa + boletos + admin)
+            # 3) Si no hay rifa activa, corre seed (con click context)
+            raffle = None
             try:
                 from app.models import Raffle
                 raffle = Raffle.query.filter_by(is_active=True).first()
@@ -53,15 +51,12 @@ def _bootstrap_db_if_needed() -> None:
                 raffle = None
 
             if not raffle:
-                # Tu comando seed ya existe en app/cli.py
+                # Importa el comando click ya registrado por Flask
                 from app.cli import seed as seed_cmd
 
-                callback = getattr(seed_cmd, "callback", None)
-                if callable(callback):
-                    callback()
-                else:
-                    # Por si seed no es click.Command
-                    seed_cmd()
+                # Ejecuta el comando como si fuera CLI, para que haya click context
+                # standalone_mode=False evita sys.exit()
+                seed_cmd.main(args=[], prog_name="seed", standalone_mode=False)
 
         finally:
             # libera el lock
@@ -86,5 +81,4 @@ def _bootstrap_db_if_needed() -> None:
                 pass
 
 
-# Bootstrap al arrancar
 _bootstrap_db_if_needed()
